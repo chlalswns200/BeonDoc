@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<body>
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader" />
+    <div>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>이름</th>
+                <th>아이디</th>
+                <th>비밀번호</th>
+                <th>성별</th>
+                <th>나이</th>
+                <th>키</th>
+                <th>체중</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="member : ${members}">
+                <td th:text="${member.id}"></td>
+                <td th:text="${member.name}"></td>
+                <td th:text="${member.loginId}"></td>
+                <td th:text="${member.password}"></td>
+                <td th:text="${member.profile?.gender}"></td>
+                <td th:text="${member.profile?.age}"></td>
+                <td th:text="${member.profile?.height}"></td>
+                <td th:text="${member.profile?.weight}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div th:replace="fragments/footer :: footer" />
+</div> <!-- /container -->
+</body>
+</html>
