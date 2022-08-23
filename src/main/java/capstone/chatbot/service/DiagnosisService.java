@@ -2,17 +2,10 @@ package capstone.chatbot.service;
 
 import capstone.chatbot.api.DiagnosisDTO;
 import capstone.chatbot.domain.Diagnosis;
-import capstone.chatbot.domain.DiagnosisDisease;
-import capstone.chatbot.domain.Disease;
-import capstone.chatbot.domain.Member;
 import capstone.chatbot.repository.DiagnosisRepository;
-import capstone.chatbot.repository.DiagnosisSearch;
-import capstone.chatbot.repository.DiseaseRepository;
-import capstone.chatbot.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 @Service
@@ -21,38 +14,22 @@ import java.util.List;
 public class DiagnosisService {
 
     private final DiagnosisRepository diagnosisRepository;
-    private final MemberRepository memberRepository;
-    private final DiseaseRepository diseaseRepository;
 
-
-    @Transactional// jpa의 모든 데이터 변경은 가급적 transactional 안에서 이루어 져야 한다.
-    public Long addDiagnosis(Diagnosis diagnosis) {
-        diagnosisRepository.save(diagnosis);
-        return diagnosis.getId();
-    }
-
+    //진단 내용을 db에 저장 한다
     @Transactional
-    public Long Disease(Long memberId, Long diseaseId) {
-
-        Member member = memberRepository.findOne(memberId);
-        Disease disease = diseaseRepository.findOne(diseaseId);
-
-        DiagnosisDisease diagnosisDisease = DiagnosisDisease.createDiagnosisDiseaseList(disease);
-
-        Diagnosis diagnosis = Diagnosis.createDiagnosis(member, diagnosisDisease);
-
-        diagnosisRepository.save(diagnosis);
-
-        return diagnosis.getId();
+    public Long addDiagnosis(Diagnosis diagnosis) {
+        diagnosisRepository.save(diagnosis); // 진단 변수를 db에 저장 한다
+        return diagnosis.getId(); // 해당 진단의 id를 반환 한다
     }
 
-
-
-    public List<DiagnosisDTO> findDiagnosis(Long id) {
-        return diagnosisRepository.findAllByStringV2(id);
+    //진단 내용을 id를 통해 db에서 조회 한다
+     public Diagnosis findOne(Long id) {
+        return diagnosisRepository.findOne(id); //db에서 id를 통해 찾은 진단 내용을 반환 한다.
     }
 
-    public DiagnosisDTO findOneByString(Long id) {
-        return diagnosisRepository.findOneByString(id);
+    //memberId를 통해서 해당 회원의 전체 진단 기록을 조회 한다
+    public List<DiagnosisDTO> findDiagnosis(Long memberId) {
+        return diagnosisRepository.findAllByStringV2(memberId); //memeberId를 통해서 전체 진단 기록을 반환한다
     }
+
 }

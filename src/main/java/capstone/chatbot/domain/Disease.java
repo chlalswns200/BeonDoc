@@ -11,17 +11,21 @@ import javax.persistence.*;
 public class Disease {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "disease_id")
     private Long id;
 
     private String name;
 
+    @Column(length = 1000)
     private String info;
-
-    private int level;
-
     private String department;
+
+    @Column(length = 5000)
+    private String cause;
+
+    @Column(length = 5000)
+    private String symptom;
 
 
 

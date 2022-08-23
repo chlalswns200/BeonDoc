@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Slf4j
 public class HomeController {
 
+    // 웹으로 호출 시 홈 페이지
     @RequestMapping("/")
     public String home() {
         log.info("home controller");

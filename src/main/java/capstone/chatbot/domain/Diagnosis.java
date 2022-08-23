@@ -6,7 +6,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +18,7 @@ import java.util.List;
 public class Diagnosis {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "diagnosis_id")
 
     private Long id;
@@ -33,6 +32,8 @@ public class Diagnosis {
 
     private LocalDate diagnosisDate;
 
+    private String percent;
+
     public void setMember(Member member) {
         this.member = member;
         member.getDiagnosis().add(this);
@@ -43,7 +44,7 @@ public class Diagnosis {
         diagnosisDisease.setDiagnosis(this);
     }
 
-    public static Diagnosis createDiagnosis(Member member, DiagnosisDisease... diagnosisDiseases) {
+    public static Diagnosis createDiagnosis(Member member,String percent,DiagnosisDisease... diagnosisDiseases) {
 
         Diagnosis diagnosis = new Diagnosis();
         diagnosis.setMember(member);
@@ -52,6 +53,7 @@ public class Diagnosis {
             diagnosis.addDiagnosisDisease(diagnosisDisease);
         }
         diagnosis.setDiagnosisDate(LocalDate.now());
+        diagnosis.setPercent(percent);
 
         return diagnosis;
     }

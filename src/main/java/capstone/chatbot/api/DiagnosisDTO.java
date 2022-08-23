@@ -14,10 +14,13 @@ import java.time.LocalDateTime;
 @Setter
 public class DiagnosisDTO {
 
+    Long id;
     String name;
     String info;
-    int level;
     String department;
+    String cause;
+    String symptom;
     LocalDate diagnosisTime;
+    String percent;
 
 }

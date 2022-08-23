@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
+import java.io.FileInputStream;
 
 @Component
 @RequiredArgsConstructor
@@ -17,8 +18,7 @@ public class InitDb {
 
     @PostConstruct
     public void init() {
-        initService.dbInit1();
-        initService.dbInit2();
+        initService.dbInit3();
     }
 
     @Component
@@ -28,70 +28,53 @@ public class InitDb {
 
         private final EntityManager em;
 
-        public void dbInit1() {
-           Member member = createMember1("최민준","chlalswns200","1234","25","175","68",1,
-                   "없음","없음","없음","없음","없음");
-           em.persist(member);
-           Disease disease1 = createDisease("탈모","머리가 빠집니다",3,"없어요");
-           em.persist(disease1);
-           Disease disease2 = createDisease("비염","코막혀요",3,"이비인후과");
-           em.persist(disease2);
-           DiagnosisDisease diagnosisDisease1 = DiagnosisDisease.createDiagnosisDiseaseList(disease1);
-           DiagnosisDisease diagnosisDisease2 = DiagnosisDisease.createDiagnosisDiseaseList(disease2);
+        public void dbInit3() {
+            try {
 
-           Diagnosis diagnosis = Diagnosis.createDiagnosis(member, diagnosisDisease1);
+                //초기 텍스트 파일을 불러오기 위한 파일 경로 지정 실시
+                String filePath = "C:\\Capstone\\chatbot\\Data\\diseaseInfo.csv";
 
-           Diagnosis diagnosis2 = Diagnosis.createDiagnosis(member, diagnosisDisease2);
-           em.persist(diagnosis);
-           em.persist(diagnosis2);
+                //파일을 읽어오기 위한 FileInputStream 객체 선언
+                FileInputStream fileStream = null;
+
+                //FileInputStream에 읽어올 파일 경로 지정 실시
+                fileStream = new FileInputStream(filePath);
+
+                byte readBuffer[] = new byte[fileStream.available()];
+
+                while (fileStream.read(readBuffer) != -1) {
+                    String str = new String(readBuffer,"UTF-8"); // csv 파일의 데이터를 읽어옴
+
+                    String[] StrList = str.split("\n"); // \n를 기준으로 문자로 나누기
+                    for (String s : StrList) {
+
+                        String[] diseaseList = s.split(","); // ,를 기준으로 문자 나누기
+                        String name = diseaseList[0]; // 이름 변수 생성
+                        String department = diseaseList[1].replace('`',','); // 담당 부서 변수 생성
+                        String info = diseaseList[2].replace('`',',');// 정보 변수 생성
+                        String cause = diseaseList[3].replace('`',','); // 원인 변수 생성
+                        String symptom = diseaseList[4].replace('`',',');// 증상 변수 생성
+
+                        Disease disease = createDisease(name,info,department,cause,symptom); //disease 클래스 변수 생성
+                        em.persist(disease); // db에 저장
+
+                    }
+                }
+                fileStream.close(); // 입출력 스트림 종료
+            }
+            catch(Exception e) {
+                System.out.println(e.getMessage()); // 예외 발생시 문자 출력
+            }
         }
 
-        public void dbInit2() {
-            Member member = createMember1("김서연","rlatjdus200","1q2w3e4r","25","160","57",0,
-                    "펜타닐","주에5병","고혈압","다리 골절","여자");
-            em.persist(member);
-            Disease disease1 = createDisease("웃음","웃음을 참지 못해요",1,"조커");
-            em.persist(disease1);
-            Disease disease2 = createDisease("병명","아파요",2,"정형외과");
-            em.persist(disease2);
-            DiagnosisDisease diagnosisDisease1 = DiagnosisDisease.createDiagnosisDiseaseList(disease1);
-            DiagnosisDisease diagnosisDisease2 = DiagnosisDisease.createDiagnosisDiseaseList(disease2);
-
-            Diagnosis diagnosis = Diagnosis.createDiagnosis(member, diagnosisDisease1);
-            Diagnosis diagnosis2 = Diagnosis.createDiagnosis(member, diagnosisDisease2);
-            em.persist(diagnosis);
-            em.persist(diagnosis2);
-        }
-
-        private Member createMember(String name,String loginId,String password,String age, String height, String weight, long gender) {
-
-            Member member = new Member();
-            member.setName(name);
-            member.setLoginId(loginId);
-            member.setPassword(password);
-            member.setProfile(new Profile(age,height,weight,gender));
-            return member;
-        }
-
-        private Member createMember1(String name,String loginId,String password,String age, String height, String weight, long gender,
-                                    String drug, String social, String family, String trauma, String femininity) {
-
-            Member member = new Member();
-            member.setName(name);
-            member.setLoginId(loginId);
-            member.setPassword(password);
-            member.setProfile(new Profile(age,height,weight,gender));
-            member.setBasicExam(new BasicExam(drug, social, family, trauma, femininity));
-            return member;
-        }
-
-        private Disease createDisease(String name, String info, int level, String department) {
-
+        // diseases 변수를 생성하기 위한 함수
+        private Disease createDisease(String name, String info, String department,String cause,String symptom) {
             Disease disease = new Disease();
             disease.setName(name);
             disease.setInfo(info);
-            disease.setLevel(level);
             disease.setDepartment(department);
+            disease.setCause(cause);
+            disease.setSymptom(symptom);
 
             return disease;
         }

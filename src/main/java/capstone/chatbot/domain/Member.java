@@ -2,11 +2,9 @@ package capstone.chatbot.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.w3c.dom.ls.LSOutput;
 
 
 import javax.persistence.*;
-import javax.persistence.criteria.Order;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +15,7 @@ import java.util.List;
 public class Member {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "member_id")
 
     private Long id;

@@ -12,7 +12,7 @@ import javax.persistence.*;
 public class DiagnosisDisease {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "diagnosis_disease_list_id")
     private Long id;
 
