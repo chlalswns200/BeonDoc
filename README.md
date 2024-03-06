@@ -24,7 +24,7 @@
 - MySQL
 - Postman
 - aws ec2
-- 
+  
 
 <h3 >자바
 - Spring boot(2.6.4)
